@@ -9,7 +9,7 @@ jobs:
     steps:  # jobのステップ
       # ステップ1
       - name: echo a string 
-        run: echo "Hello World"
+        run: eecho "Hello World"
       # ステップ2
       - name: multiline script
         run: | # 複数のコマンドを記載したいときは|(パイプ)で繋ぐ
