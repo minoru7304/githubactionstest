@@ -1,0 +1,20 @@
+name: checkout #Workflow名
+
+on: 
+  - push # イベントトリガー：Git Pushした時に実行
+ 
+jobs:
+  run-github-actions:   # job名(任意の名前で良い)
+    runs-on: ubuntu-latest # virtual machineの形式を指定   
+    steps:  # jobのステップ
+      # ステップ1
+      - name: list files
+        run: |
+          pwd
+          ls -a
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: list files after checkout
+        run: |
+          pwd
+          ls -a
