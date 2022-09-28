@@ -1,0 +1,17 @@
+name: hello world js action #Workflow名
+
+on: 
+  - push # イベントトリガー：Git Pushした時に実行
+ 
+jobs:
+  run-github-actions:   # job名(任意の名前で良い)
+    runs-on: ubuntu-latest # virtual machineの形式を指定   
+    steps:  # jobのステップ
+      # ステップ1
+      - name: hello minoru
+        id: greet
+        uses: actions/hello-world-javascript-action@v1
+        with:
+          who-to-greet: 'Minoru'
+      - name: greeting time log
+        run: echo "${{ steps.greet.outputs.time }}"

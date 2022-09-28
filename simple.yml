@@ -1,0 +1,22 @@
+name: Shell Commands #Workflow名
+
+on: 
+  - push # イベントトリガー：Git Pushした時に実行
+ 
+jobs:
+  run-shell-commmand:   # job名(任意の名前で良い)
+    runs-on: ubuntu-latest # virtual machineの形式を指定   
+    steps:  # jobのステップ
+      # ステップ1
+      - name: echo a string 
+        run: echo "Hello World"
+      # ステップ2
+      - name: multiline script
+        run: | # 複数のコマンドを記載したいときは|(パイプ)で繋ぐ
+          node -v
+          npm -v
+      - name: python Command
+        run: |
+          import platform
+          print(platform.processor())
+        shell: python
