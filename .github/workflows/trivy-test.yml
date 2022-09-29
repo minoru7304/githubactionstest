@@ -1,5 +1,5 @@
-name: Dockle Scan Test
-run-name: dockle scan
+name: Trivy Scan Test
+run-name: trivy scan
 on: 
   - push
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+          image-ref: 'docker.io/minoru7304/docker-whale:udemy'
           format: 'sarif'
           output: 'trivy-results.sarif'
         env:
