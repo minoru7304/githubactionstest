@@ -15,7 +15,6 @@ jobs:
         with:
           image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/minoru_test:v2'
           format: 'table'
-          exit-code: '1'
           # output: 'trivy-results.sarif'
           severity: 'CRITICAL'
         env:
