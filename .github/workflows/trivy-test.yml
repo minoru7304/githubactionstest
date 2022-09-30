@@ -37,10 +37,22 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           AWS_DEFAULT_REGION: ap-northeast-1
       
+      - name: Upload Report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Trivy Report
+          path: trivy-results.json
+      
       - name: Run Dockle
         uses: erzz/dockle-action@v1
         with:
           image: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/minoru_test:v2'
+          failure-threshold: fatal
+        env:
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_DEFAULT_REGION: ap-northeast-1
 
       - name: Upload Report
         uses: actions/upload-artifact@v2
