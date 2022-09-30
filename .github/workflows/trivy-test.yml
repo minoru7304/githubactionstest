@@ -13,7 +13,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/minoru_test'
+          image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/minoru_test:v2'
           format: 'sarif'
           output: 'trivy-results.sarif'
         env:
