@@ -37,8 +37,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ap-northeast-1
-          role-to-assume: arn:aws:iam::379378515717:role/minoru-saito-github-oidc-role
-          # role-session-name: MySessionName
+          role-to-assume: arn:aws:iam::${{AWS_ACOUNT_ID}}:role/minoru-saito-github-oidc-role
 
       - name: Run Trivy vulnerability scanner output table
         uses: aquasecurity/trivy-action@master
@@ -66,11 +65,11 @@ jobs:
         if: always()
         with:
           name:  Upload Report
-          path: trivy-results.json
+          path: "*.json"
           
-      - name: Upload Report
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name:  Upload Report
-          path: dockle-report.json
+      # - name: Upload Report
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name:  Upload Report
+      #     path: dockle-report.json
