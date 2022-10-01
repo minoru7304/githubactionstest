@@ -1,7 +1,13 @@
 name: Image Scan Test
 run-name: Image Scan Test
 on: 
-  - push
+  pull_request:
+    types: 
+      - opened
+      - edited
+    paths:
+      - 'pull-images.csv'
+
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: write  # This is required for actions/checkout
@@ -67,17 +73,11 @@ jobs:
         with:
           name:  Upload Report
           path: "*.json"
-          
-      # - name: Upload Report
-      #   uses: actions/upload-artifact@v3
-      #   if: always()
-      #   with:
-      #     name:  Upload Report
-      #     path: dockle-report.json
 
       - name: Post Comments
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo ${{ github.event.pull_request.html_url }}
           gh pr comment -F ./outputs ${{ github.event.pull_request.html_url }}
           
