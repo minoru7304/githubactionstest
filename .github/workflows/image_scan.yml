@@ -5,12 +5,12 @@ on:
     types: 
       - opened
       - edited
-    paths:
-      - 'pull-images.csv'
+    # paths:
+    #   - 'pull-images.csv'
 
-permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: write  # This is required for actions/checkout
+permissions: write-all
+  # id-token: write # This is required for requesting the JWT
+  # contents: write  # This is required for actions/checkout
 
 # pull_images.csvを読み込んでスキャンイメージをmatrixにセット
 jobs:
