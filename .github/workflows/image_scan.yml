@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        scan_imagas: ${{ fromJson(needs.set-matrix.outputs.images) }}
+        scan_imagas: ${{ fromJson(needs.set_matrix.outputs.images) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
