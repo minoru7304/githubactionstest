@@ -43,14 +43,14 @@ jobs:
       - name: Run Trivy vulnerability scanner output table
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/${{matrix.scan_imagas}}'
+          image-ref: ${{matrix.scan_imagas}}
           format: 'table'
           severity: 'CRITICAL'
       
       - name: Run Trivy vulnerability scanner output json
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/${{matrix.scan_imagas}}'
+          image-ref: ${{matrix.scan_imagas}}
           format: 'json'
           output: 'trivy-results.json'
           severity: 'CRITICAL'
@@ -58,7 +58,7 @@ jobs:
       - name: Run Dockle output json
         uses: erzz/dockle-action@v1
         with:
-          image: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/${{matrix.scan_imagas}}'
+          image: ${{matrix.scan_imagas}}
           failure-threshold: fatal
 
       - name: Upload Report
