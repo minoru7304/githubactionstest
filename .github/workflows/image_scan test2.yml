@@ -37,12 +37,11 @@ jobs:
       matrix:
         scan_imagas: ${{ fromJson(needs.set_matrix.outputs.images) }}
     steps:
-      - name: Set a variable
-        id: var
-        run: |
-          artifact_name=$(echo ${{matrix.scan_imagas}} | cut -d "/" -f 2)
-          echo "::set-output name=artifact_name::${artifact_name}"
-          echo ${{matrix.scan_imagas}}
+      # - name: Set a variable
+      #   id: var
+      #   run: |
+      #     artifact_name=$(echo ${{matrix.scan_imagas}} | cut -d "/" -f 2)
+      #     echo "::set-output name=artifact_name::${artifact_name}"
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -58,7 +57,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'table'
-          # output: '${{steps.var.outputs.artifact_name}}.txt'
+          output: 'table-result.txt'
           severity: 'CRITICAL'
       
       - name: Run Trivy vulnerability scanner output json
@@ -81,7 +80,7 @@ jobs:
         if: always()
         with:
           name:  Upload Report
-          path: "*"
+          path: "table-result.txt"
 
       # - name: Post Comments
       #   env:
