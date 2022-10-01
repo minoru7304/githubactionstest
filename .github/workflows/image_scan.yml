@@ -6,10 +6,27 @@ permissions:
   id-token: write # This is required for requesting the JWT
   contents: read  # This is required for actions/checkout
 
+# pull_images.csvを読み込んでスキャンイメージをmatrixにセット
 jobs:
   set-matrix:
-    name: Build
     runs-on: ubuntu-20.04
+  outputs:
+      images: ${{ steps.get_scan_images.outputs.images }}
+  steps:
+      - uses: actions/checkout@v2
+      - name: get scan images from csvfile
+        id: get_scan_images
+        run: |
+          images = awk -F ',' 'OFS=":" {print $1,$2}' pull-images.csv | tail -n +2 | jq -R -s -c 'split("\n")[:-1]'
+          echo "::set-output name=images::${images}"
+
+  Image Scan:
+    needs: set-matrix
+    name: Image Scan
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        scan_imagas: ${{ fromJson(needs.set-matrix.outputs.images) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,41 +36,28 @@ jobs:
         with:
           aws-region: ap-northeast-1
           role-to-assume: arn:aws:iam::379378515717:role/minoru-saito-github-oidc-role
-          role-session-name: MySessionName
+          # role-session-name: MySessionName
 
       - name: Run Trivy vulnerability scanner output table
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/minoru_test:v2'
+          image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/${{matrix.scan_imagas}}'
           format: 'table'
-          # output: 'trivy-results.sarif'
           severity: 'CRITICAL'
-        # env:
-        #   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-        #   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-        #   AWS_DEFAULT_REGION: ap-northeast-1
       
       - name: Run Trivy vulnerability scanner output json
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/minoru_test:v2'
+          image-ref: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/${{matrix.scan_imagas}}'
           format: 'json'
           output: 'trivy-results.json'
           severity: 'CRITICAL'
-        # env:
-        #   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-        #   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-        #   AWS_DEFAULT_REGION: ap-northeast-1
       
       - name: Run Dockle output json
         uses: erzz/dockle-action@v1
         with:
-          image: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/minoru_test:v2'
+          image: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/${{matrix.scan_imagas}}'
           failure-threshold: fatal
-        # env:
-        #   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-        #   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-        #   AWS_DEFAULT_REGION: ap-northeast-1
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
@@ -68,8 +72,3 @@ jobs:
         with:
           name:  Upload Report
           path: dockle-report.json
-
-      - uses: at-wat/setup-gh-pr-comment@v0
-      - run: gh-pr-comment "title" "message"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
