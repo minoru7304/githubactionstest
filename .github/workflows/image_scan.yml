@@ -8,7 +8,7 @@ permissions:
 
 # pull_images.csvを読み込んでスキャンイメージをmatrixにセット
 jobs:
-  set-matrix:
+  set_matrix:
     runs-on: ubuntu-20.04
     outputs:
       images: ${{ steps.get_scan_images.outputs.images }}
@@ -22,7 +22,7 @@ jobs:
           images = awk -F ',' 'OFS=":" {print $1,$2}' pull-images.csv | tail -n +2 | jq -R -s -c 'split("\n")[:-1]'
           echo "::set-output name=images::${images}"
 
-  Image Scan:
+  Image_Scan:
     needs: set-matrix
     name: Image Scan
     runs-on: ubuntu-20.04
