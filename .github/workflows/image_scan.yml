@@ -60,14 +60,16 @@ jobs:
         if: always()
         with:
           name:  Upload Report
-          path: *.json
+          path: trivy-results.json
+          
+      - name: Upload Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name:  Upload Report
+          path: dockle-report.json
 
       - uses: at-wat/setup-gh-pr-comment@v0
       - run: gh-pr-comment "title" "message"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#やること
-#csvからイメージを取得して繰り返し実行
-#IAMロールでのAWSアクセス
-#実行結果アーティファクトをコメントに表示する 
