@@ -10,12 +10,12 @@ permissions:
 jobs:
   set-matrix:
     runs-on: ubuntu-20.04
-  outputs:
+    outputs:
       images: ${{ steps.get_scan_images.outputs.images }}
-  steps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: get scan images from csvfile
         id: get_scan_images
         run: |
