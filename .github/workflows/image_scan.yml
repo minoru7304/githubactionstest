@@ -73,7 +73,7 @@ jobs:
         with:
           image: ${{matrix.scan_imagas}}
           failure-threshold: fatal
-          report-name: '${{steps.var.outputs.artifact_name}}_dockle_result.json'
+          report-name: '${{steps.var.outputs.artifact_name}}_dockle_result'
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
