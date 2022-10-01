@@ -1,5 +1,5 @@
-name: Trivy Scan Test
-run-name: trivy scan
+name: Image Scan Test
+run-name: Image Scan Test
 on: 
   - push
 permissions:
@@ -18,7 +18,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ap-northeast-1
-          role-to-assume: arn:aws:iam::379378515717:role/my-github-actions-role
+          role-to-assume: arn:aws:iam::379378515717:role/minoru-saito-github-oidc-role
           role-session-name: MySessionName
 
       - name: Run Trivy vulnerability scanner output table
@@ -28,10 +28,10 @@ jobs:
           format: 'table'
           # output: 'trivy-results.sarif'
           severity: 'CRITICAL'
-        env:
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          AWS_DEFAULT_REGION: ap-northeast-1
+        # env:
+        #   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+        #   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        #   AWS_DEFAULT_REGION: ap-northeast-1
       
       - name: Run Trivy vulnerability scanner output json
         uses: aquasecurity/trivy-action@master
@@ -40,20 +40,20 @@ jobs:
           format: 'json'
           output: 'trivy-results.json'
           severity: 'CRITICAL'
-        env:
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          AWS_DEFAULT_REGION: ap-northeast-1
+        # env:
+        #   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+        #   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        #   AWS_DEFAULT_REGION: ap-northeast-1
       
       - name: Run Dockle output json
         uses: erzz/dockle-action@v1
         with:
           image: '379378515717.dkr.ecr.ap-northeast-1.amazonaws.com/minoru_test:v2'
           failure-threshold: fatal
-        env:
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          AWS_DEFAULT_REGION: ap-northeast-1
+        # env:
+        #   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+        #   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        #   AWS_DEFAULT_REGION: ap-northeast-1
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
@@ -61,7 +61,7 @@ jobs:
         with:
           name:  Upload Report
           path: *.json
-          
+
       - uses: at-wat/setup-gh-pr-comment@v0
       - run: gh-pr-comment "title" "message"
         env:
