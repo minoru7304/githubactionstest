@@ -50,7 +50,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'table'
-          output: 'outputs'
+          output: '${{matrix.scan_imagas}}_table.txt'
           severity: 'CRITICAL'
       
       - name: Run Trivy vulnerability scanner output json
@@ -58,7 +58,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'json'
-          output: 'trivy-results.json'
+          output: '${{matrix.scan_imagas}}.json'
           severity: 'CRITICAL'
       
       - name: Run Dockle output json
@@ -66,18 +66,19 @@ jobs:
         with:
           image: ${{matrix.scan_imagas}}
           failure-threshold: fatal
+          report-name: '${{matrix.scan_imagas}}.json'
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name:  Upload Report
-          path: "*.json"
+          path: "${{matrix.scan_imagas}}*"
 
-      - name: Post Comments
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo ${{ github.event.pull_request.html_url }}
-          gh pr comment -F ./outputs ${{ github.event.pull_request.html_url }}
+      # - name: Post Comments
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     echo ${{ github.event.pull_request.html_url }}
+      #     gh pr comment -F ./outputs ${{ github.event.pull_request.html_url }}
           
