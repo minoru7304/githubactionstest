@@ -78,7 +78,6 @@ jobs:
       - name: Post Comments
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          URL: ${{ github.event.pull_request.html_url }}
         run: |
-          gh pr comment -F ./outputs "${URL}"
+          gh pr comment -F ./outputs ${{ github.event.pull_request.html_url }}
           
