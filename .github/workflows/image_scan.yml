@@ -1,5 +1,5 @@
-name: Image Scan Test
-run-name: Image Scan Test
+name: Image Scan
+run-name: Image Scan
 on: 
   - push
   # pull_request:
@@ -9,9 +9,9 @@ on:
     # paths:
     #   - 'pull-images.csv'
 
-permissions: write-all
-  # id-token: write # This is required for requesting the JWT
-  # contents: write  # This is required for actions/checkout
+permissions: #write-all
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
 
 # pull_images.csvを読み込んでスキャンイメージをmatrixにセット
 jobs:
@@ -57,7 +57,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'table'
-          output: '${{steps.var.outputs.artifact_name}}.txt'
+          output: '${{steps.var.outputs.artifact_name}}_trivy_result_table.txt'
           severity: 'CRITICAL'
       
       - name: Run Trivy vulnerability scanner output json
@@ -65,7 +65,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'json'
-          output: '${{steps.var.outputs.artifact_name}}.json'
+          output: '${{steps.var.outputs.artifact_name}}_trivy_result.json'
           severity: 'CRITICAL'
       
       - name: Run Dockle output json
@@ -73,7 +73,7 @@ jobs:
         with:
           image: ${{matrix.scan_imagas}}
           failure-threshold: fatal
-          report-name: '${{steps.var.outputs.artifact_name}}.json'
+          report-name: '${{steps.var.outputs.artifact_name}}_dockle_result.json'
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
@@ -82,6 +82,7 @@ jobs:
           name:  Upload Report
           path: "${{steps.var.outputs.artifact_name}}*"
 
+      # PRのコメントに結果を出力
       # - name: Post Comments
       #   env:
       #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
