@@ -40,10 +40,11 @@ jobs:
           role-to-assume: arn:aws:iam::${{secrets.AWS_ACOUNT_ID}}:role/minoru-saito-github-oidc-role
 
       - name: Run Trivy vulnerability scanner output table
-        uses: aquasecurity/trivy-action@master > outputs
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'table'
+          output: 'outputs'
           severity: 'CRITICAL'
       
       - name: Run Trivy vulnerability scanner output json
