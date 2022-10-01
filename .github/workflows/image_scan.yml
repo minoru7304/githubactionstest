@@ -57,7 +57,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'table'
-          output: '${{steps.var.outputs.artifact_name}}.txt'
+          # output: '${{steps.var.outputs.artifact_name}}.txt'
           severity: 'CRITICAL'
       
       - name: Run Trivy vulnerability scanner output json
@@ -65,7 +65,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'json'
-          output: '${{steps.var.outputs.artifact_name}}.json'
+          # output: '${{steps.var.outputs.artifact_name}}.json'
           severity: 'CRITICAL'
       
       - name: Run Dockle output json
@@ -73,7 +73,7 @@ jobs:
         with:
           image: ${{matrix.scan_imagas}}
           failure-threshold: fatal
-          report-name: '${{steps.var.outputs.artifact_name}}.json'
+          # report-name: '${{steps.var.outputs.artifact_name}}.json'
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
