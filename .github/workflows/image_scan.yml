@@ -23,7 +23,7 @@ jobs:
           echo "::set-output name=images::${images}"
 
   Image_Scan:
-    needs: set-matrix
+    needs: set_matrix
     name: Image Scan
     runs-on: ubuntu-20.04
     strategy:
