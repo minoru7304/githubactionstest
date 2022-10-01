@@ -40,7 +40,7 @@ jobs:
           role-to-assume: arn:aws:iam::${{secrets.AWS_ACOUNT_ID}}:role/minoru-saito-github-oidc-role
 
       - name: Run Trivy vulnerability scanner output table
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@master > outputs
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'table'
@@ -76,8 +76,8 @@ jobs:
 
       - name: Post Comments
         env:
-          # GithubのSettings --> EnvironmentsにPERSONAL_ACCESS_TOKENを登録しておく
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           URL: ${{ github.event.pull_request.html_url }}
         run: |
           gh pr comment -F ./outputs "${URL}"
+          
