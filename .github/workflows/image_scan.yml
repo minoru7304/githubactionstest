@@ -36,6 +36,12 @@ jobs:
       matrix:
         scan_imagas: ${{ fromJson(needs.set_matrix.outputs.images) }}
     steps:
+      - name: Set a variable
+        id: var
+        run: |
+          artifact_name=$(echo ${{matrix.scan_imagas}} | cut -d "/" -f 2)
+          echo "::set-output name=artifact_name::${artifact_name}"
+
       - name: Checkout code
         uses: actions/checkout@v3
       
@@ -50,7 +56,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'table'
-          output: '${{matrix.scan_imagas}}_table.txt'
+          output: '${{steps.var.outputs.artifact_name}}.txt'
           severity: 'CRITICAL'
       
       - name: Run Trivy vulnerability scanner output json
@@ -58,7 +64,7 @@ jobs:
         with:
           image-ref: ${{matrix.scan_imagas}}
           format: 'json'
-          output: '${{matrix.scan_imagas}}.json'
+          output: '${{steps.var.outputs.artifact_name}}.json'
           severity: 'CRITICAL'
       
       - name: Run Dockle output json
@@ -66,14 +72,14 @@ jobs:
         with:
           image: ${{matrix.scan_imagas}}
           failure-threshold: fatal
-          report-name: '${{matrix.scan_imagas}}.json'
+          report-name: '${{steps.var.outputs.artifact_name}}.json'
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name:  Upload Report
-          path: "${{matrix.scan_imagas}}*"
+          path: "${{steps.var.outputs.artifact_name}}*"
 
       # - name: Post Comments
       #   env:
