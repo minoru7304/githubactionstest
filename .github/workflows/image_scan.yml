@@ -1,10 +1,11 @@
 name: Image Scan Test
 run-name: Image Scan Test
 on: 
-  pull_request:
-    types: 
-      - opened
-      - edited
+  - push
+  # pull_request:
+  #   types: 
+  #     - opened
+  #     - edited
     # paths:
     #   - 'pull-images.csv'
 
